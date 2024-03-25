@@ -11,11 +11,11 @@ from rest_framework import status
 @permission_classes((IsAuthenticated, ))
 def get_coords(request):
     try:
-        data = request.data
+        data = request.GET.dict()
         query = data["address"]
         url = "https://geocode.search.hereapi.com/v1/geocode"
         payload = {"q": query, "apiKey": os.getenv("HERE_API")}
-        r = requests.post(url, params=payload)
+        r = requests.get(url, params=payload)
         response = r.json()
         position = response["position"]
         return Response(data=position, status=status.HTTP_200_OK)
@@ -37,7 +37,7 @@ def get_coords(request):
 @permission_classes((IsAuthenticated, ))
 def get_route(request):
     try:
-        data = request.data
+        data = request.GET.dict()
         origin = data["origin"]
         destination = data["destination"]
         url = "https://router.hereapi.com/v8/routes"
@@ -69,7 +69,7 @@ def get_route(request):
 @permission_classes((IsAuthenticated, ))
 def get_route_via_charging(request):
     try:
-        data = request.data
+        data = request.GET.dict()
         origin = data["origin"]
         destination = data["destination"]
         initial_charge = data["initial_charge"]
