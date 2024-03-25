@@ -4,10 +4,11 @@ import Canvas from "./pages/Canvas";
 
 function App() {
 
+
   return (
     <>
-    {/* <Login /> */}
-    <Canvas />
+      <Login />
+      {/* <Canvas /> */}
     </>
   );
 }

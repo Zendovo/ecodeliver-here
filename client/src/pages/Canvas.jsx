@@ -1,14 +1,19 @@
-import React from 'react'
-import MapComponent from '../components/Map'
-import SearchBox from '../components/SearchBox'
+import React, {useState} from "react";
+import MapComponent from "../components/Map";
+import SearchBox from "../components/SearchBox";
 
 const Canvas = () => {
-  return (
-    <div className=' w-screen h-screen relative'> 
-    <MapComponent />
-    <SearchBox />
-    </div>
-  )
-}
+  const [restaurantPosition, setRestaurantPosition] = useState({
+    lat: 26.9124,
+    lng: 75.7873,
+  });
 
-export default Canvas
+  return (
+    <div className=" w-screen h-screen relative">
+      <MapComponent restaurantPosition={restaurantPosition} />
+      <SearchBox />
+    </div>
+  );
+};
+
+export default Canvas;

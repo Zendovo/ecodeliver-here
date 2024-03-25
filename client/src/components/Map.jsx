@@ -1,19 +1,27 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import H from "@here/maps-api-for-javascript";
 
-const MapComponent = () => {
+const MapComponent = (props) => {
   const mapRef = useRef(null);
   const map = useRef(null);
   const platform = useRef(null);
+  const { restaurantPosition } = props;
 
   useEffect(() => {
     // Check if the map object has already been created
     if (!map.current) {
       // Create a platform object
       platform.current = new H.service.Platform({
-        apikey: "0EvGHy5pYqRinr-hVz8PccR7NJALTnq4HBs2Nf2gyg4",
+        apikey: import.meta.env.VITE_API_KEY,
       });
-
+    //   if (restaurantPosition) {
+    //     calculateRoute(
+    //       platform.current,
+    //       map.current,
+    //       { lat: 28.3802, lng: 75.6092 },
+    //       restaurantPosition
+    //     );
+    //   }
       // Get user's location using Geolocation API
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -32,6 +40,7 @@ const MapComponent = () => {
           const rasterTileProvider = new H.service.rasterTile.Provider(
             rasterTileService
           );
+          const marker = new H.map.Marker({ lat: latitude, lng: longitude });
 
           // Create a new Tile layer with the Raster Tile provider
           const rasterTileLayer = new H.map.layer.TileLayer(rasterTileProvider);
@@ -50,16 +59,86 @@ const MapComponent = () => {
 
           // Set the map object to the reference
           map.current = newMap;
+          map.current.addObject(marker);
         },
         (error) => {
           console.error("Error getting user's location:", error);
         }
       );
     }
-  }, []);
+  }, [restaurantPosition, platform, map]);
+
+  function getMarkerIcon(color) {
+    const svgCircle = `<svg width="20" height="20" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <g id="marker">
+                <circle cx="10" cy="10" r="7" fill="${color}" stroke="${color}" stroke-width="4" />
+                </g></svg>`;
+    return new H.map.Icon(svgCircle, {
+      anchor: {
+        x: 10,
+        y: 10,
+      },
+    });
+  }
+
+  function calculateRoute(platform, map, start, destination) {
+    function routeResponseHandler(response) {
+      const sections = response.routes[0].sections;
+      const lineStrings = [];
+      sections.forEach((section) => {
+        // convert Flexible Polyline encoded string to geometry
+        lineStrings.push(
+          H.geo.LineString.fromFlexiblePolyline(section.polyline)
+        );
+      });
+      const multiLineString = new H.geo.MultiLineString(lineStrings);
+      const bounds = multiLineString.getBoundingBox();
+
+      // Create the polyline for the route
+      const routePolyline = new H.map.Polyline(multiLineString, {
+        style: {
+          lineWidth: 5,
+        },
+      });
+
+      // Remove all the previous map objects, if any
+      map.removeObjects(map.getObjects());
+      // Add the polyline to the map
+      map.addObject(routePolyline);
+      map.addObjects([
+        // Add a marker for the user
+        new H.map.Marker(start, {
+          icon: getMarkerIcon("red"),
+        }),
+        // Add a marker for the selected restaurant
+        new H.map.Marker(destination, {
+          icon: getMarkerIcon("green"),
+        }),
+      ]);
+    }
+
+    // Get an instance of the H.service.RoutingService8 service
+    const router = platform.getRoutingService(null, 8);
+
+    // Define the routing service parameters
+    const routingParams = {
+      origin: `${start.lat},${start.lng}`,
+      destination: `${destination.lat},${destination.lng}`,
+      transportMode: "car",
+      return: "polyline",
+    };
+    // Call the routing service with the defined parameters
+    router.calculateRoute(routingParams, routeResponseHandler, console.error);
+  }
 
   // Return a div element to hold the map
-  return <div style={{ width: "100%", height: "100%", overflow: 'hidden' }} ref={mapRef} className=" absolute top-0" />;
+  return (
+    <div
+      style={{ width: "100%", height: "100%", overflow: "hidden" }}
+      ref={mapRef}
+      className=" absolute top-0"
+    />
+  );
 };
 
 export default MapComponent;
