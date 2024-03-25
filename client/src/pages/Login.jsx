@@ -1,9 +1,11 @@
 import { useState } from "react";
 import React from "react";
+import GlobalContext from "../context/GlobalContext";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { token, setToken } = React.useContext(GlobalContext);
   async function setUser() {
     try {
       const res = await fetch(import.meta.env.VITE_LOGIN_API, {
@@ -18,7 +20,7 @@ const Login = () => {
       });
 
       const data = await res.json();
-      console.log(data);
+      setToken(data.access);
     } catch (error) {
       console.error("Error:", error.message);
     }
