@@ -18,16 +18,16 @@ def get_coords(request):
         r = requests.post(url, params=payload)
         response = r.json()
         position = response["position"]
-        Response(data=position, status=status.HTTP_200_OK)
+        return Response(data=position, status=status.HTTP_200_OK)
 
     except KeyError:
-        Response(
+        return Response(
             data={"message": "Send address"},
             status=status.HTTP_403_FORBIDDEN,
         )
     except Exception as e:
         print(e)
-        Response(
+        return Response(
             data={"message": "An error occured"},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
@@ -51,15 +51,15 @@ def get_route(request):
         }
         r = requests.post(url, params=payload)
         response = r.json()
-        Response(data=response, status=status.HTTP_200_OK)
+        return Response(data=response, status=status.HTTP_200_OK)
     except KeyError:
-        Response(
+        return Response(
             data={"message": "Send address"},
             status=status.HTTP_403_FORBIDDEN,
         )
     except Exception as e:
         print(e)
-        Response(
+        return Response(
             data={"message": "An error occured"},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
@@ -100,15 +100,15 @@ def get_route_via_charging(request):
         }
         r = requests.post(url, params=payload)
         response = r.json()
-        Response(data=response, status=status.HTTP_200_OK)
+        return Response(data=response, status=status.HTTP_200_OK)
     except KeyError:
-        Response(
+        return Response(
             data={"message": "Send address"},
             status=status.HTTP_403_FORBIDDEN,
         )
     except Exception as e:
         print(e)
-        Response(
+        return Response(
             data={"message": "An error occured"},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
