@@ -57,14 +57,8 @@ def get_route(request):
         }
         r = requests.get(url, params=payload)
         response = r.json()
-        try:
-            polyline = response["routes"]["sections"]["polyline"]
-            summary = response["routes"]["sections"]["polyline"]
-        except:
-            return Response(
-                data={"message": "No Route found"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
+        polyline = response["routes"]["sections"]["polyline"]
+        summary = response["routes"]["sections"]["summary"]
         return Response(
             data={"polyline": polyline, "summary": summary}, status=status.HTTP_200_OK
         )
@@ -116,14 +110,9 @@ def get_route_via_charging(request):
         }
         r = requests.get(url, params=payload)
         response = r.json()
-        try:
-            polyline = response["routes"]["sections"]["polyline"]
-            summary = response["routes"]["sections"]["polyline"]
-        except:
-            return Response(
-                data={"message": "No Route found"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
+        polyline = response["routes"]["sections"]["polyline"]
+        summary = response["routes"]["sections"]["summary"]
+
         return Response(
             data={"polyline": polyline, "summary": summary}, status=status.HTTP_200_OK
         )
