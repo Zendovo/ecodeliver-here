@@ -1,13 +1,13 @@
 import { useState } from "react";
-import Login from "./components/Login";
-import MapComponent from "./components/Map";
+import Login from "./pages/Login";
+import Canvas from "./pages/Canvas";
 
 function App() {
 
   return (
     <>
-    <Login />
-    {/* <MapComponent /> */}
+    {/* <Login /> */}
+    <Canvas />
     </>
   );
 }
