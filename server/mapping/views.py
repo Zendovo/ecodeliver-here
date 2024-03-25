@@ -43,7 +43,7 @@ def get_coords(request):
 @permission_classes((IsAuthenticated,))
 def get_route(request):
     try:
-        data = request.GET.dict()
+        data = request.data
         origin = data["origin"]
         destination = data["destination"]
         url = "https://router.hereapi.com/v8/routes"
@@ -75,7 +75,7 @@ def get_route(request):
 @permission_classes((IsAuthenticated,))
 def get_route_via_charging(request):
     try:
-        data = request.GET.dict()
+        data = request.data
         origin = data["origin"]
         destination = data["destination"]
         initial_charge = data["initial_charge"]
