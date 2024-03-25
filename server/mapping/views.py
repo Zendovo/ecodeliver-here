@@ -7,8 +7,8 @@ import os
 from rest_framework import status
 
 
-@api_view(['GET'])
-@permission_classes((IsAuthenticated, ))
+@api_view(["GET"])
+@permission_classes((IsAuthenticated,))
 def get_coords(request):
     try:
         data = request.GET.dict()
@@ -17,7 +17,13 @@ def get_coords(request):
         payload = {"q": query, "apiKey": os.getenv("HERE_API")}
         r = requests.get(url, params=payload)
         response = r.json()
-        position = response["position"]
+        try:
+            position = response["items"][0]["position"]
+        except:
+            return Response(
+                data={"message": "No location found"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
         return Response(data=position, status=status.HTTP_200_OK)
 
     except KeyError:
@@ -33,8 +39,8 @@ def get_coords(request):
         )
 
 
-@api_view(['GET'])
-@permission_classes((IsAuthenticated, ))
+@api_view(["GET"])
+@permission_classes((IsAuthenticated,))
 def get_route(request):
     try:
         data = request.GET.dict()
@@ -65,8 +71,8 @@ def get_route(request):
         )
 
 
-@api_view(['GET'])
-@permission_classes((IsAuthenticated, ))
+@api_view(["GET"])
+@permission_classes((IsAuthenticated,))
 def get_route_via_charging(request):
     try:
         data = request.GET.dict()
