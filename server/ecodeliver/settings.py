@@ -29,7 +29,7 @@ SECRET_KEY = "django-insecure-r1w@vk&r^i@ov^(@(a+7(p5@9gd_-pme2+2^35@n4ija%k3p2t
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "zendovo-api.chickenkiller.com"
+    "zendovo-api.chickenkiller.com",
     "here.rakshitdvm.live"
 ]
 
