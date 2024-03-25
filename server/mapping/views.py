@@ -55,7 +55,7 @@ def get_route(request):
             "vehicle[speedCap]": "14",
             "apiKey": os.getenv("HERE_API"),
         }
-        r = requests.post(url, params=payload)
+        r = requests.get(url, params=payload)
         response = r.json()
         return Response(data=response, status=status.HTTP_200_OK)
     except KeyError:
@@ -104,7 +104,7 @@ def get_route_via_charging(request):
             "ev[maxChargeAfterChargingStation]": max_charge_after_charging,
             "apiKey": os.getenv("HERE_API"),
         }
-        r = requests.post(url, params=payload)
+        r = requests.get(url, params=payload)
         response = r.json()
         return Response(data=response, status=status.HTTP_200_OK)
     except KeyError:
