@@ -30,7 +30,9 @@ SECRET_KEY = "django-insecure-r1w@vk&r^i@ov^(@(a+7(p5@9gd_-pme2+2^35@n4ija%k3p2t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "zendovo-api.chickenkiller.com"
+]
 
 
 # Application definition
