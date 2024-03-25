@@ -110,8 +110,8 @@ def get_route_via_charging(request):
         }
         r = requests.get(url, params=payload)
         response = r.json()
-        polyline = response["routes"]["sections"]["polyline"]
-        summary = response["routes"]["sections"]["summary"]
+        polyline = response["routes"][0]["sections"]["polyline"]
+        summary = response["routes"][0]["sections"]["summary"]
 
         return Response(
             data={"polyline": polyline, "summary": summary}, status=status.HTTP_200_OK
