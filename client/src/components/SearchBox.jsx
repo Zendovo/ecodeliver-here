@@ -35,8 +35,6 @@ const SearchBox = () => {
       } else {
         setDestCoords(data);
       }
-      console.log(sourceCoords);
-      console.log(destCoords);
     } catch (error) {
       console.error("Error:", error.message);
     }
