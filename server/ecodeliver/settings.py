@@ -30,6 +30,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "zendovo-api.chickenkiller.com"
+    "here.rakshitdvm.live"
 ]
 
 CORS_ALLOW_ALL_ORIGINS=True
