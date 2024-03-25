@@ -59,7 +59,7 @@ const MapComponent = () => {
   }, []);
 
   // Return a div element to hold the map
-  return <div style={{ width: "100%", height: "100vh", overflow: 'hidden' }} ref={mapRef} />;
+  return <div style={{ width: "100%", height: "100%", overflow: 'hidden' }} ref={mapRef} className=" absolute top-0" />;
 };
 
 export default MapComponent;
