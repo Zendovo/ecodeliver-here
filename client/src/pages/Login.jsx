@@ -1,6 +1,29 @@
 import React from "react";
 
 const Login = () => {
+  async function setUser() {
+    try {
+      const res = await fetch(
+        import.meta.env.VITE_LOGIN_API,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: "dvm",
+            password: "dvmtesting",
+          }),
+        }
+      );
+
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.error("Error:", error.message);
+    }
+  }
+
   return (
     <section className="h-screen flex flex-col md:flex-row justify-center space-y-10 md:space-y-0 md:space-x-16 items-center my-2 mx-5 md:mx-0 md:my-0 text-2xl">
       <div className="md:w-1/3 max-w-sm">
@@ -62,6 +85,7 @@ const Login = () => {
           <button
             className="mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 text-white uppercase rounded text-xs tracking-wider w-full"
             type="submit"
+            onClick={setUser}
           >
             Submit
           </button>
