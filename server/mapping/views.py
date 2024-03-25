@@ -57,10 +57,20 @@ def get_route(request):
         }
         r = requests.get(url, params=payload)
         response = r.json()
-        return Response(data=response, status=status.HTTP_200_OK)
+        try:
+            polyline = response["routes"]["sections"]["polyline"]
+            summary = response["routes"]["sections"]["polyline"]
+        except:
+            return Response(
+                data={"message": "No Route found"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+        return Response(
+            data={"polyline": polyline, "summary": summary}, status=status.HTTP_200_OK
+        )
     except KeyError:
         return Response(
-            data={"message": "Send address"},
+            data={"message": "Send the missing key"},
             status=status.HTTP_403_FORBIDDEN,
         )
     except Exception as e:
@@ -106,10 +116,20 @@ def get_route_via_charging(request):
         }
         r = requests.get(url, params=payload)
         response = r.json()
-        return Response(data=response, status=status.HTTP_200_OK)
+        try:
+            polyline = response["routes"]["sections"]["polyline"]
+            summary = response["routes"]["sections"]["polyline"]
+        except:
+            return Response(
+                data={"message": "No Route found"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+        return Response(
+            data={"polyline": polyline, "summary": summary}, status=status.HTTP_200_OK
+        )
     except KeyError:
         return Response(
-            data={"message": "Send address"},
+            data={"message": "Send the missing key"},
             status=status.HTTP_403_FORBIDDEN,
         )
     except Exception as e:
