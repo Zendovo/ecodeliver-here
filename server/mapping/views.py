@@ -43,7 +43,7 @@ def get_coords(request):
 @permission_classes((IsAuthenticated,))
 def get_route(request):
     try:
-        data = request.GET.dict()
+        data = request.data
         origin = data["origin"]
         destination = data["destination"]
         url = "https://router.hereapi.com/v8/routes"
@@ -55,7 +55,7 @@ def get_route(request):
             "vehicle[speedCap]": "14",
             "apiKey": os.getenv("HERE_API"),
         }
-        r = requests.post(url, params=payload)
+        r = requests.get(url, params=payload)
         response = r.json()
         return Response(data=response, status=status.HTTP_200_OK)
     except KeyError:
@@ -75,7 +75,7 @@ def get_route(request):
 @permission_classes((IsAuthenticated,))
 def get_route_via_charging(request):
     try:
-        data = request.GET.dict()
+        data = request.data
         origin = data["origin"]
         destination = data["destination"]
         initial_charge = data["initial_charge"]
@@ -104,7 +104,7 @@ def get_route_via_charging(request):
             "ev[maxChargeAfterChargingStation]": max_charge_after_charging,
             "apiKey": os.getenv("HERE_API"),
         }
-        r = requests.post(url, params=payload)
+        r = requests.get(url, params=payload)
         response = r.json()
         return Response(data=response, status=status.HTTP_200_OK)
     except KeyError:

@@ -1,28 +1,39 @@
+import { useState } from "react";
 import React from "react";
+import GlobalContext from "../context/GlobalContext";
 
 const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const { token, setToken } = React.useContext(GlobalContext);
   async function setUser() {
     try {
-      const res = await fetch(
-        import.meta.env.VITE_LOGIN_API,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username: "dvm",
-            password: "dvmtesting",
-          }),
-        }
-      );
+      const res = await fetch(import.meta.env.VITE_LOGIN_API, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      });
 
       const data = await res.json();
-      console.log(data);
+      setToken(data.access);
     } catch (error) {
       console.error("Error:", error.message);
     }
   }
+
+  const handleUsername = (event) => {
+    const value = event.target.value;
+    setUsername(value);
+  };
+  const handlePassword = (event) => {
+    const value = event.target.value;
+    setPassword(value);
+  };
 
   return (
     <section className="h-screen flex flex-col md:flex-row justify-center space-y-10 md:space-y-0 md:space-x-16 items-center my-2 mx-5 md:mx-0 md:my-0 text-2xl">
@@ -62,12 +73,16 @@ const Login = () => {
         <input
           className="text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded"
           type="text"
-          placeholder="Email Address"
+          placeholder="Enter your username"
+          value={username}
+          onChange={handleUsername}
         />
         <input
           className="text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded mt-4"
           type="password"
           placeholder="Password"
+          value={password}
+          onChange={handlePassword}
         />
         <div className="mt-4 flex justify-between font-semibold text-sm">
           {/* <label className="flex text-slate-500 hover:text-slate-600 cursor-pointer">
