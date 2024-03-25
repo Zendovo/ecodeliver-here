@@ -57,8 +57,8 @@ def get_route(request):
         }
         r = requests.get(url, params=payload)
         response = r.json()
-        polyline = response["routes"]["sections"]["polyline"]
-        summary = response["routes"]["sections"]["summary"]
+        polyline = response["routes"][0]["sections"][0]["polyline"]
+        summary = response["routes"][0]["sections"][0]["summary"]
         return Response(
             data={"polyline": polyline, "summary": summary}, status=status.HTTP_200_OK
         )
@@ -110,8 +110,8 @@ def get_route_via_charging(request):
         }
         r = requests.get(url, params=payload)
         response = r.json()
-        polyline = response["routes"][0]["sections"][0]["polyline"]
-        summary = response["routes"][0]["sections"][0]["summary"]
+        polyline = response["routes"][0]["polyline"][0]
+        summary = response["routes"][0]["summary"]
 
         return Response(
             data={"polyline": polyline, "summary": summary}, status=status.HTTP_200_OK
