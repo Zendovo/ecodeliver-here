@@ -7,7 +7,7 @@ from rest_framework import status
 
 
 @IsAuthenticated
-def get_location(request):
+def get_coords(request):
     try:
         data = request.data
         query = data["address"]
