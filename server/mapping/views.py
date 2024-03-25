@@ -7,37 +7,43 @@ import os
 from rest_framework import status
 
 
-@api_view(['GET'])
-@permission_classes((IsAuthenticated, ))
+@api_view(["GET"])
+@permission_classes((IsAuthenticated,))
 def get_coords(request):
     try:
-        data = request.data
+        data = request.GET.dict()
         query = data["address"]
         url = "https://geocode.search.hereapi.com/v1/geocode"
         payload = {"q": query, "apiKey": os.getenv("HERE_API")}
-        r = requests.post(url, params=payload)
+        r = requests.get(url, params=payload)
         response = r.json()
-        position = response["position"]
-        Response(data=position, status=status.HTTP_200_OK)
+        try:
+            position = response["items"][0]["position"]
+        except:
+            return Response(
+                data={"message": "No location found"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+        return Response(data=position, status=status.HTTP_200_OK)
 
     except KeyError:
-        Response(
+        return Response(
             data={"message": "Send address"},
             status=status.HTTP_403_FORBIDDEN,
         )
     except Exception as e:
         print(e)
-        Response(
+        return Response(
             data={"message": "An error occured"},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 
 
-@api_view(['GET'])
-@permission_classes((IsAuthenticated, ))
+@api_view(["GET"])
+@permission_classes((IsAuthenticated,))
 def get_route(request):
     try:
-        data = request.data
+        data = request.GET.dict()
         origin = data["origin"]
         destination = data["destination"]
         url = "https://router.hereapi.com/v8/routes"
@@ -51,25 +57,25 @@ def get_route(request):
         }
         r = requests.post(url, params=payload)
         response = r.json()
-        Response(data=response, status=status.HTTP_200_OK)
+        return Response(data=response, status=status.HTTP_200_OK)
     except KeyError:
-        Response(
+        return Response(
             data={"message": "Send address"},
             status=status.HTTP_403_FORBIDDEN,
         )
     except Exception as e:
         print(e)
-        Response(
+        return Response(
             data={"message": "An error occured"},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 
 
-@api_view(['GET'])
-@permission_classes((IsAuthenticated, ))
+@api_view(["GET"])
+@permission_classes((IsAuthenticated,))
 def get_route_via_charging(request):
     try:
-        data = request.data
+        data = request.GET.dict()
         origin = data["origin"]
         destination = data["destination"]
         initial_charge = data["initial_charge"]
@@ -100,15 +106,15 @@ def get_route_via_charging(request):
         }
         r = requests.post(url, params=payload)
         response = r.json()
-        Response(data=response, status=status.HTTP_200_OK)
+        return Response(data=response, status=status.HTTP_200_OK)
     except KeyError:
-        Response(
+        return Response(
             data={"message": "Send address"},
             status=status.HTTP_403_FORBIDDEN,
         )
     except Exception as e:
         print(e)
-        Response(
+        return Response(
             data={"message": "An error occured"},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
