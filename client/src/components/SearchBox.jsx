@@ -68,20 +68,20 @@ const SearchBox = () => {
   useEffect(() => {
     async function getRoute() {
       try {
-        const res = await fetch(import.meta.env.VITE_ROUTE_API, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            origin: sourceCoords,
-            destination: destCoords,
-          }),
-        });
+        const res = await fetch(
+          import.meta.env.VITE_ROUTE_API +
+            `origin_lat=${sourceCoords.lat}&origin_lng=${sourceCoords.lng}&destination_lat=${destCoords.lat}&destination_lng=${destCoords.lng}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         const data = await res.json();
-        console.log(data);
+        // console.log(data);
         setPolyline(data.polyline);
       } catch (error) {
         console.error("Error:", error.message);

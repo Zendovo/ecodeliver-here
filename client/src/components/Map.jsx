@@ -26,7 +26,7 @@ const MapComponent = (props) => {
           const rasterTileService = platform.current.getRasterTileService({
             queryParams: {
               style: "explore.day",
-              size: 128,
+              size: 64,
               lang: "en",
             },
           });
