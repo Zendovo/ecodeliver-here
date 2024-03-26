@@ -43,13 +43,15 @@ def get_coords(request):
 @permission_classes((IsAuthenticated,))
 def get_route(request):
     try:
-        data = request.data
-        origin = data["origin"]
-        destination = data["destination"]
+        data = request.GET.dict()
+        origin_lat = data["origin_lat"]
+        origin_lng = data["origin_lng"]
+        destination_lat = data["destination_lat"]
+        destination_lng = data["destination_lng"]
         url = "https://router.hereapi.com/v8/routes"
         payload = {
-            "origin": f'{origin["lat"]},{origin["lng"]}',
-            "destination": f'{destination["lat"]},{destination["lng"]}',
+            "origin": f"{origin_lat},{origin_lng}",
+            "destination": f"{destination_lat},{destination_lng}",
             "transportMode": "car",
             "return": "polyline,summary,actions,instructions",
             "vehicle[speedCap]": "14",
@@ -79,19 +81,21 @@ def get_route(request):
 @permission_classes((IsAuthenticated,))
 def get_route_via_charging(request):
     try:
-        data = request.data
-        origin = data["origin"]
-        destination = data["destination"]
-        initial_charge = data["initial_charge"]
-        max_charge = data["max_charge"]
+        data = request.GET.dict()
+        origin_lat = data["origin_lat"]
+        origin_lng = data["origin_lng"]
+        destination_lat = data["destination_lat"]
+        destination_lng = data["destination_lng"]
+        initial_charge = int(data["initial_charge"])
+        max_charge = int(data["max_charge"])
         if initial_charge <= 0.8 * max_charge:
             max_charge_after_charging = 0.8 * max_charge
         else:
             max_charge_after_charging = max_charge
         url = "https://router.hereapi.com/v8/routes"
         payload = {
-            "origin": f'{origin["lat"]},{origin["lng"]}',
-            "destination": f'{destination["lat"]},{destination["lng"]}',
+            "origin": f"{origin_lat},{origin_lng}",
+            "destination": f"{destination_lat},{destination_lng}",
             "transportMode": "car",
             "return": "polyline,summary,actions,instructions",
             "ev[freeFlowSpeedTable]": "0,0.239,27,0.239,45,0.259,60,0.196,75,0.207,90,0.238,100,0.26,110,0.296,120,0.337,130,0.351,250,0.351",
