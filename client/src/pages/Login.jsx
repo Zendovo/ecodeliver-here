@@ -9,6 +9,7 @@ const Login = () => {
   async function setUser() {
     try {
       const res = await fetch(import.meta.env.VITE_LOGIN_API, {
+        // Making a POST request to login API
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -20,9 +21,9 @@ const Login = () => {
       });
 
       const data = await res.json();
-      setToken(data.access);
+      setToken(data.access); // Setting the token with the response access token
     } catch (error) {
-      console.error("Error:", error.message);
+      console.error("Error:", error.message); // Logging any errors that occur during the fetch
     }
   }
 

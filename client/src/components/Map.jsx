@@ -1,11 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import H from "@here/maps-api-for-javascript";
+import GlobalContext from "../context/GlobalContext";
 
 const MapComponent = (props) => {
   const mapRef = useRef(null);
   const map = useRef(null);
   const platform = useRef(null);
   const { restaurantPosition } = props;
+  const { polyline, destCoords } = useContext(GlobalContext);
 
   useEffect(() => {
     // Check if the map object has already been created
@@ -14,14 +16,7 @@ const MapComponent = (props) => {
       platform.current = new H.service.Platform({
         apikey: import.meta.env.VITE_API_KEY,
       });
-    //   if (restaurantPosition) {
-    //     calculateRoute(
-    //       platform.current,
-    //       map.current,
-    //       { lat: 28.3802, lng: 75.6092 },
-    //       restaurantPosition
-    //     );
-    //   }
+
       // Get user's location using Geolocation API
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -31,7 +26,8 @@ const MapComponent = (props) => {
           const rasterTileService = platform.current.getRasterTileService({
             queryParams: {
               style: "explore.day",
-              size: 512,
+              size: 128,
+              lang: "en",
             },
           });
 
@@ -56,7 +52,27 @@ const MapComponent = (props) => {
           const behavior = new H.mapevents.Behavior(
             new H.mapevents.MapEvents(newMap)
           );
+          if (polyline) {
+            var polylineString = polyline;
 
+            // convert Flexible Polyline encoded string to geometry
+            const lineStrings = [];
+            lineStrings.push(
+              H.geo.LineString.fromFlexiblePolyline(polylineString)
+            );
+            const multiLineString = new H.geo.MultiLineString(lineStrings);
+            const bounds = multiLineString.getBoundingBox();
+
+            // Create the polyline for the route
+            const routePolyline = new H.map.Polyline(multiLineString, {
+              style: {
+                lineWidth: 4,
+                strokeColor: "rgba(0, 128, 255, 0.7)",
+              },
+            });
+            map.current.addObject(routePolyline);
+            newMap.setCenter(destCoords);
+          }
           // Set the map object to the reference
           map.current = newMap;
           map.current.addObject(marker);
@@ -66,7 +82,7 @@ const MapComponent = (props) => {
         }
       );
     }
-  }, [restaurantPosition, platform, map]);
+  }, [restaurantPosition, platform, map, polyline]);
 
   function getMarkerIcon(color) {
     const svgCircle = `<svg width="20" height="20" version="1.1" xmlns="http://www.w3.org/2000/svg">
