@@ -86,8 +86,8 @@ def get_route_via_charging(request):
         origin_lng = data["origin_lng"]
         destination_lat = data["destination_lat"]
         destination_lng = data["destination_lng"]
-        initial_charge = data["initial_charge"]
-        max_charge = data["max_charge"]
+        initial_charge = int(data["initial_charge"])
+        max_charge = int(data["max_charge"])
         if initial_charge <= 0.8 * max_charge:
             max_charge_after_charging = 0.8 * max_charge
         else:
