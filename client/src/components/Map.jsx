@@ -7,7 +7,7 @@ const MapComponent = (props) => {
   const map = useRef(null);
   const platform = useRef(null);
   const { restaurantPosition } = props;
-  const { polyline, destCoords } = useContext(GlobalContext);
+  const { polyline, destCoords, sourceCoords } = useContext(GlobalContext);
 
   useEffect(() => {
     // Check if the map object has already been created
@@ -108,6 +108,8 @@ const MapComponent = (props) => {
       // Add the polyline to the map
       map.current.addObject(routePolyline);
       map.current.setCenter(destCoords);
+      map.current.addObject(new H.map.Marker(destCoords));
+      map.current.addObject(new H.map.Marker(sourceCoords));
     }
   }, [polyline, destCoords, map]);
 
