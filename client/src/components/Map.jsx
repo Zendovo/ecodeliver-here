@@ -82,7 +82,34 @@ const MapComponent = (props) => {
         }
       );
     }
-  }, [restaurantPosition, platform, map, polyline]);
+  }, [restaurantPosition, platform, map]);
+
+  useEffect(() => {
+    if (polyline && map.current) {
+      // Remove the old polyline if it exists
+      if (map.current.getObjects().length > 0) {
+        map.current.removeObjects(map.current.getObjects());
+      }
+
+      // Convert Flexible Polyline encoded string to geometry
+      const lineStrings = [];
+      lineStrings.push(H.geo.LineString.fromFlexiblePolyline(polyline));
+      const multiLineString = new H.geo.MultiLineString(lineStrings);
+      const bounds = multiLineString.getBoundingBox();
+
+      // Create the polyline for the route
+      const routePolyline = new H.map.Polyline(multiLineString, {
+        style: {
+          lineWidth: 4,
+          strokeColor: "rgba(0, 128, 255, 0.7)",
+        },
+      });
+
+      // Add the polyline to the map
+      map.current.addObject(routePolyline);
+      map.current.setCenter(destCoords);
+    }
+  }, [polyline, destCoords, map]);
 
   function getMarkerIcon(color) {
     const svgCircle = `<svg width="20" height="20" version="1.1" xmlns="http://www.w3.org/2000/svg">
